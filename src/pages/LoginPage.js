@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { setAuthToken } from "../helpers/setAuthToken";
+import { setAuthToken } from "../helpers/Auth";
 import axios from "axios";
 import { Link } from "react-router-dom";
 

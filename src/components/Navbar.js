@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import AuthGuard from "./AuthGuard";
+import { hasRole, logout } from "../helpers/Auth";
 
 export default function NavBar() {
     return (
@@ -69,9 +70,9 @@ function ProfilComponent() {
                         Panier
                         <span className="badge bg-dark text-white ms-1 rounded-pill">0</span>
                     </a></li>
-                    <li><a className="dropdown-item" href="#">Administration</a></li>
+                    {hasRole("ROLE_ADMIN") ? <li><Link className="dropdown-item" to="#">Administration</Link></li> : null}
                     <li><hr className="dropdown-divider" /></li>
-                    <li><a className="dropdown-item" href="#">Se déconnecter</a></li>
+                    <li><button className="dropdown-item" onClick={logout}>Se déconnecter</button></li>
                 </ul>
             </li>
         </ul>

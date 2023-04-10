@@ -1,8 +1,11 @@
 import React from "react";
 
+import { getRoles } from "../helpers/Auth";
+
 export default function AuthGuard({AuthComponent, UnAuthComponent, redirect}) {
 
     function hasJWT() {
+        console.log(getRoles())
         return localStorage.getItem("token")
     }
 
