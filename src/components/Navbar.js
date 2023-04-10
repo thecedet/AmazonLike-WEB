@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import AuthGuard from "./AuthGuard";
 
 export default function NavBar() {
     return (
@@ -20,7 +21,7 @@ export default function NavBar() {
                             </ul>
                         </li>
                     </ul>
-                    <LoginComponent />
+                    <AuthGuard  AuthComponent={ProfilComponent} UnAuthComponent={LoginComponent} />
                 </div>
             </div>
         </nav>
@@ -31,14 +32,14 @@ function LoginComponent() {
     return (
         <ul className="navbar-nav flex-row flex-wrap ms-md-auto">
             <li className="nav-item col-6 col-lg-auto">
-                <button className="btn btn-outline-dark" type="submit">Connexion</button>
+                <Link className="btn btn-outline-dark" to={"/login"} >Connexion</Link>
             </li>
             <li className="nav-item py-2 py-lg-1 col-12 col-lg-auto">
                 <div className="vr d-none d-lg-flex h-100 mx-lg-2 text-white" bis_skin_checked="1"></div>
                 <hr className="d-lg-none my-2 text-white-50" />
             </li>
             <li className="nav-item col-6 col-lg-auto">
-                <button className="btn btn-outline-dark" type="submit">Inscription</button>
+                <Link className="btn btn-outline-dark" to={"/register"}>Inscription</Link>
             </li>
         </ul>
     );
