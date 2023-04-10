@@ -1,66 +1,88 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+
+import { setAuthToken } from "../helpers/setAuthToken";
+import axios from "axios";
+import { Link } from "react-router-dom";
+
+import ErrorBox from "../components/ErrorBox";
 
 function LoginPage() {
 
     window.scrollTo(0,0);
+	const [error, setError] = useState(false);
+
+    const handleSubmit = event => {
+
+		event.preventDefault();
+
+        const form = event.currentTarget;
+
+        const username = form.elements.username.value;
+        const password = form.elements.password.value;
+
+        delete axios.defaults.headers.common["Authorization"];
+
+        axios.post("http://localhost:8080/users/signin", {username, password})
+          .then(response => {
+            const token = response.data;
+            localStorage.setItem("token", token);
+            setAuthToken(token);
+            window.location.href = '/'
+          })
+          .catch(err => {
+			setError(err.response.data.message)
+		  });
+      };
 
     return (
-        <section class="h-100">
-		<div class="container h-100">
-			<div class="row justify-content-sm-center h-100">
-				<div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
-					<div class="text-center my-5">
+		<>
+		{error ? <ErrorBox message={error} /> : null}
+        <section className="h-100">
+		<div className="container h-100">
+			<div className="row justify-content-sm-center h-100">
+				<div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+					<div className="text-center my-5">
 						<img src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="logo" width="100"/>
 					</div>
-					<div class="card shadow-lg">
-						<div class="card-body p-5">
-							<h1 class="fs-4 card-title fw-bold mb-4">Login</h1>
-							<form method="POST" class="needs-validation" novalidate="" autocomplete="off">
-								<div class="mb-3">
-									<label class="mb-2 text-muted" for="email">E-Mail Address</label>
-									<input id="email" type="email" class="form-control" name="email" value="" required autofocus />
-									<div class="invalid-feedback">
-										Email is invalid
-									</div>
+					<div className="card shadow-lg">
+						<div className="card-body p-5">
+							<h1 className="fs-4 card-title fw-bold mb-4">Login</h1>
+							<form className="needs-validation" noValidate="" autoComplete="off" onSubmit={handleSubmit}>
+								<div className="mb-3">
+									<label className="mb-2 text-muted" htmlFor="username">E-Mail ou Username</label>
+									<input id="username" type="text" className="form-control" name="username" required autoFocus />
 								</div>
 
-								<div class="mb-3">
-									<div class="mb-2 w-100">
-										<label class="text-muted" for="password">Password</label>
-										<a href="forgot.html" class="float-end">
-											Forgot Password?
-										</a>
+								<div className="mb-3">
+									<div className="mb-2 w-100">
+										<label className="text-muted" htmlFor="password">Password</label>
+										<a href="forgot.html" className="float-end">Forgot Password?</a>
 									</div>
-									<input id="password" type="password" class="form-control" name="password" required />
-								    <div class="invalid-feedback">
-								    	Password is required
-							    	</div>
+									<input id="password" type="password" className="form-control" name="password" required />
+								    <div className="invalid-feedback">Password is required</div>
 								</div>
 
-								<div class="d-flex align-items-center">
-									<div class="form-check">
-										<input type="checkbox" name="remember" id="remember" class="form-check-input"/>
-										<label for="remember" class="form-check-label">Remember Me</label>
+								<div className="d-flex align-items-center">
+									<div className="form-check">
+										<input type="checkbox" name="remember" id="remember" className="form-check-input"/>
+										<label htmlFor="remember" className="form-check-label">Remember Me</label>
 									</div>
-									<button type="submit" class="btn btn-primary ms-auto">
-										Login
-									</button>
+									<button type="submit" className="btn btn-primary ms-auto">Login</button>
 								</div>
 							</form>
 						</div>
-						<div class="card-footer py-3 border-0">
-							<div class="text-center">
-								Don't have an account? <a href="register.html" class="text-dark">Create One</a>
-							</div>
+						<div className="card-footer py-3 border-0">
+							<div className="text-center">Pas de compte ? <Link to="/register" className="text-dark">S'inscrire</Link></div>
 						</div>
 					</div>
-					<div class="text-center mt-5 text-muted">
-						Copyright &copy; 2017-2021 &mdash; Your Company 
+					<div className="text-center mt-5 text-muted">
+						Copyright &copy; 2023- &mdash; AmazonLike
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
+	</>
     );
 }
 
