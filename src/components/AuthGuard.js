@@ -1,25 +1,21 @@
 import React from "react";
 
-import { getRoles } from "../helpers/Auth";
-
-export default function AuthGuard({AuthComponent, UnAuthComponent, redirect}) {
+export default function AuthGuard({AuthComponent, UnAuthComponent, redirect, props}) {
 
     function hasJWT() {
-        console.log(getRoles())
         return localStorage.getItem("token")
     }
 
-    function checkRedirect(Component) {
-        console.log(Component)
+    function checkRedirect(Component, props) {
         if(Component == null) {
             window.location = redirect
         }else {
-            return <Component />
+            return <Component props={props} />
         }
     }
 
     return (
-        hasJWT() ? checkRedirect(AuthComponent) : checkRedirect(UnAuthComponent)
+        hasJWT() ? checkRedirect(AuthComponent, props) : checkRedirect(UnAuthComponent, props)
     );
 
 }
