@@ -16,6 +16,11 @@ export const logout = () => {
     window.location.reload()
 }
 
+export const refresh = token => {
+    localStorage.setItem("token", token);
+    setAuthToken(token);
+}
+
 export const getRoles = () => {
     const token = localStorage.getItem("token")
     if(token == null) {
