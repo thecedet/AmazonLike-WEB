@@ -25,9 +25,9 @@ export default function NavBar({cart}) {
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catégories</a>
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a className="dropdown-item" href="#!">Tous les produits</a></li>
+                                <li><Link className="dropdown-item" to="/">Tous les produits</Link></li>
                                 <li><hr className="dropdown-divider" /></li>
-                                {categories.map(category => <li><a className="dropdown-item" href="#!">{category}</a></li>)}
+                                {categories.map(category => <li><Link className="dropdown-item" to={`#${category}`}>{category}</Link></li>)}
                             </ul>
                         </li>
                     </ul>
@@ -38,9 +38,18 @@ export default function NavBar({cart}) {
     );
 }
 
-function LoginComponent() {
+function LoginComponent({props}) {
     return (
         <ul className="navbar-nav flex-row flex-wrap ms-md-auto">
+            <li className="nav-item col-5 col-lg-auto">
+                <Link className="btn btn-outline-dark" to={"/cart"} >Panier
+                    <span className="badge bg-dark text-white ms-1 rounded-pill">{props.cart}</span>
+                </Link>
+            </li>
+            <li className="nav-item py-2 py-lg-1 col-12 col-lg-auto">
+                <div className="vr d-none d-lg-flex h-100 mx-lg-2 text-white" bis_skin_checked="1"></div>
+                <hr className="d-lg-none my-2 text-white-50" />
+            </li>
             <li className="nav-item col-6 col-lg-auto">
                 <Link className="btn btn-outline-dark" to={"/login"} >Connexion</Link>
             </li>
@@ -64,28 +73,22 @@ function ProfilComponent({props}) {
 
     return (
         <ul className="navbar-nav flex-row flex-wrap ms-md-auto">
-            <li className="nav-item col-6 col-lg-auto">
-                <button className="btn btn-outline-dark" type="submit">
-                    <i className="bi-cart-fill me-1"></i>
-                    Panier
-                    <span className="badge bg-dark text-white ms-1 rounded-pill">{props.cart}</span>
-                </button>
-            </li>
             <li className="nav-item py-2 py-lg-1 col-12 col-lg-auto">
                 <div className="vr d-none d-lg-flex h-100 mx-lg-2 text-white" bis_skin_checked="1"></div>
                 <hr className="d-lg-none my-2 text-white-50" />
             </li>
             <li>
-                <button className="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle"></i>
+                <button className="btn btn-outline-secondary dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i className="bi bi-person-circle"></i>
+                    {props.cart !== 0 && <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{props.cart}</span>}
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                     <li><a className="dropdown-item" href="#">Profil</a></li>
-                    <li><a className="dropdown-item" href="#">
+                    <li><Link className="dropdown-item" to={"/cart"}>
                         Panier
                         <span className="badge bg-dark text-white ms-1 rounded-pill">{props.cart}</span>
-                    </a></li>
-                    {hasRole("ROLE_ADMIN") ? <li><Link className="dropdown-item" to="#">Administration</Link></li> : null}
+                    </Link></li>
+                    <AuthGuard role={"ROLE_ADMIN"} AuthComponent={() => <li><Link className="dropdown-item" to="/admin">Administration</Link></li>} />
                     <li><hr className="dropdown-divider" /></li>
                     <li><button className="dropdown-item" onClick={logout}>Se déconnecter</button></li>
                 </ul>

@@ -1,6 +1,7 @@
 import React from "react";
+import { hasRole } from "../helpers/Auth";
 
-export default function AuthGuard({AuthComponent, UnAuthComponent, redirect, props}) {
+export default function AuthGuard({AuthComponent, UnAuthComponent, redirect, role,...props}) {
 
     function hasJWT() {
         return localStorage.getItem("token")
@@ -8,14 +9,15 @@ export default function AuthGuard({AuthComponent, UnAuthComponent, redirect, pro
 
     function checkRedirect(Component, props) {
         if(Component == null) {
-            window.location = redirect
+            if(redirect !== undefined) window.location = redirect
+            else return null
         }else {
-            return <Component props={props} />
+            return <Component {...props} />
         }
     }
 
     return (
-        hasJWT() ? checkRedirect(AuthComponent, props) : checkRedirect(UnAuthComponent, props)
+        hasJWT() && hasRole(role) ? checkRedirect(AuthComponent, props) : checkRedirect(UnAuthComponent, props)
     );
 
 }

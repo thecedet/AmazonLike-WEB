@@ -25,5 +25,5 @@ export const getRoles = () => {
 }
 
 export const hasRole = role => {
-    return getRoles().includes(role)
+    return role === undefined || getRoles().includes(role)
 }
