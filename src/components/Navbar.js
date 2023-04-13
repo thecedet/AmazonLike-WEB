@@ -24,7 +24,7 @@ export default function NavBar({cart, setHash}) {
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                         <li className="nav-item"><Link className="nav-link" to="https://github.com">GitHub</Link></li>
                         <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catégories</a>
+                            {window.location.pathname === "/" && (<a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catégories</a>)}
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><Link className="dropdown-item" to="/">Tous les produits</Link></li>
                                 <li><hr className="dropdown-divider" /></li>

@@ -2,9 +2,11 @@ import React, { useState } from "react";
 
 export default function Card({product, cart, setCart}) {
 
+    const [counter, setCounter] = useState(0)
 
     const handle = nbr => {
         setCart(cart + nbr)
+        setCounter(counter+1)
         localStorage.setItem("cart", cart + nbr)
     }
 
@@ -30,7 +32,7 @@ export default function Card({product, cart, setCart}) {
                     {(cart !== 0) ? (
                         <div className="row justify-content-md-center card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <button className="btn btn-outline-secondary col col-lg-2" onClick={() => handle(-1)}>-</button>
-                            <span className="col-md-auto">{cart}</span>
+                            <span className="col-md-auto">{counter}</span>
                             <button className="btn btn-outline-secondary col col-lg-2" onClick={() => handle(1)}>+</button>
                         </div>) : (
                         <div className="text-center">
