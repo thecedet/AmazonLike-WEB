@@ -83,7 +83,7 @@ function ProfilComponent({props}) {
                     {props.cart !== 0 && <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{props.cart}</span>}
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
-                    <li><a className="dropdown-item" href="#">Profil</a></li>
+                    <li><Link className="dropdown-item" to={"/me"}>Profil</Link></li>
                     <li><Link className="dropdown-item" to={"/cart"}>
                         Panier
                         <span className="badge bg-dark text-white ms-1 rounded-pill">{props.cart}</span>
