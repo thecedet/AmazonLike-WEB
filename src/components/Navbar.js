@@ -4,7 +4,7 @@ import AuthGuard from "./AuthGuard";
 import { hasRole, logout } from "../helpers/Auth";
 import axios from "axios";
 
-export default function NavBar({cart}) {
+export default function NavBar({cart, setHash}) {
 
     const [categories, setCategories] = useState([])
 
@@ -12,6 +12,7 @@ export default function NavBar({cart}) {
         axios.get("http://localhost:8080/products/categories").then(response => {
             setCategories(response.data)
         }).catch(console.log)
+
     }, [])
 
     return (
@@ -27,7 +28,7 @@ export default function NavBar({cart}) {
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><Link className="dropdown-item" to="/">Tous les produits</Link></li>
                                 <li><hr className="dropdown-divider" /></li>
-                                {categories.map(category => <li><Link className="dropdown-item" to={`#${category}`}>{category}</Link></li>)}
+                                {categories.map(category => <li><Link className="dropdown-item" onClick={() => setHash(category)} to={`#${category}`}>{category}</Link></li>)}
                             </ul>
                         </li>
                     </ul>
