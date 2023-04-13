@@ -11,6 +11,13 @@ export default function AdminPage() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([])
 
+    const [name, setName] = useState("")
+    const [price, setPrice] = useState("")
+    const [shortDescription, setShortDescription] = useState("")
+    const [category, setCategory] = useState("")
+    const [description, setDescription] = useState()
+
+
 
     useEffect(() => {
         axios.get("http://localhost:8080/users").then(response => {
@@ -31,9 +38,21 @@ export default function AdminPage() {
 
         axios.get("http://localhost:8080/products/categories").then(response => {
             setCategories(response.data)
+            setCategory(response.data[0])
         }).catch(console.log)
 
     }, []);
+
+    const create = () => {
+        axios.post("http://localhost:8080/products", {name, price, shortDescription, description, categories: [category]}).then(response => {
+            setProducts([...products, response.data])
+            setName("")
+            setPrice("")
+            setShortDescription("")
+            setCategory(categories[0])
+            setDescription("")
+        }).catch(console.log)
+    }
 
     return (
         <>
@@ -65,6 +84,57 @@ export default function AdminPage() {
         
         <hr className="h-25"/>
 
+        <div class="modal fade" id="create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ajouter un article</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form className="needs-validation" noValidate="" autoComplete="off">
+
+                            <div className="mb-3">
+								<div className="mb-2 w-100">
+									<label className="text-muted" htmlFor="name">Nom</label>
+								</div>
+								<input id="name" type="text" className="form-control" name="name" value={name} onChange={e => setName(e.target.value)} required />
+							</div>
+                            <div className="mb-3">
+								<div className="mb-2 w-100">
+									<label className="text-muted" htmlFor="price">Prix</label>
+								</div>
+								<input id="price" type="text" className="form-control" name="price" value={price} onChange={e => setPrice(e.target.value)} required />
+							</div>
+                            <div className="mb-3">
+								<div className="mb-2 w-100">
+									<label className="text-muted" htmlFor="shortDescription">Description courte</label>
+								</div>
+								<input id="shortDescription" type="text" className="form-control" name="shortDescription" value={shortDescription} onChange={e => setShortDescription(e.target.value)} required />
+							</div>
+
+                            <div className="mb-3">
+                                <label className="mb-2 text-muted" htmlFor="firstname">Catégorie</label>
+                                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="inputGroupSelect01" onChange={e => setCategory(e.target.value)}>
+                                    {categories.map(Acategory => <option key={Acategory} value={Acategory} selected={category === Acategory} >{Acategory}</option>)}
+                                </select>
+                            </div>
+
+                            <div class="form-floating">
+                                <textarea class="form-control" id="floatingTextarea2" value={description} onChange={e => setDescription(e.target.value)}></textarea>
+                                <label for="floatingTextarea2">Description</label>
+                            </div>
+
+						</form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={create}>Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div className="container">
             <div className="row">
 	            <div className="col-lg-12">
@@ -76,7 +146,7 @@ export default function AdminPage() {
 							            <th><span>Name</span></th>
 							            <th><span>Price</span></th>
 							            <th><span>Description courte</span></th>
-							            <th><button type="button" class="btn btn-success" data-bs-dismiss="modal">Ajouter</button></th>
+							            <th><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#create">Ajouter</button></th>
 						            </tr>
 					            </thead>
 					            <tbody>
@@ -101,6 +171,8 @@ function User({user, roles}) {
     const [firstName, setFirstName] = useState(user.firstName)
     const [role, setRole] = useState(user.roles)
 
+    const [visible, setVisible] = useState(true)
+
     function cancel() {
         setUsername(user.username)
         setEmail(user.email)
@@ -109,13 +181,19 @@ function User({user, roles}) {
         setRole(user.roles)
     }
 
+    function remove() {
+        axios.delete(`http://localhost:8080/users/${user.username}`).then(_ => {
+            setVisible(false)
+        }).catch(console.log)
+    }
+
     function update() {
         axios.put(`http://localhost:8080/users/update/${user.username}`, {username, email, lastName, firstName, roles: role}).then(response => {
             user.username = username;
         }).catch(console.log)
     }
 
-    return (
+    return visible && (
         <>
         <tr>
 			<td className="align-middle">
@@ -139,7 +217,7 @@ function User({user, roles}) {
                 <button type="button" className="btn btn-primary me-md-3" data-bs-toggle="modal" data-bs-target={`#${username}`}>
                     <i className="bi bi-pencil-square"></i>
                 </button>
-                <button type="button" className="btn btn-danger me-md-3">
+                <button type="button" className="btn btn-danger me-md-3" onClick={remove}>
                     <i className="bi bi-trash-fill"></i>
                 </button>
 			</td>
@@ -178,7 +256,7 @@ function User({user, roles}) {
 
                             <div className="mb-3">
                                 <label className="mb-2 text-muted" htmlFor="firstname">Role</label>
-                                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="inputGroupSelect01" onChange={e => setRole(e.target.value)}>
+                                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="inputGroupSelect01" onChange={e => setRole([e.target.value])}>
                                     {roles.map(Arole => <option key={Arole} value={Arole} selected={role.includes(Arole)} >{Arole}</option>)}
                                 </select>
                             </div>
@@ -205,28 +283,35 @@ function Product({product, categories}) {
     const [shortDescription, setShortDescription] = useState(product.shortDescription)
     const [category, setCategory] = useState(product.categories)
     const [description, setDescription] = useState()
+
+    const [visible, setVisible] = useState(true)
+
+    let defaultDescription;
+
     function cancel() {
         setName(product.name)
         setPrice(product.price)
         setShortDescription(product.shortDescription)
         setCategory(product.categories)
-        setDescription()
+        setDescription(defaultDescription)
+    }
+
+    function remove() {
+        axios.delete(`http://localhost:8080/products/${product.id}`).then(setVisible(false)).catch(console.log)
     }
 
     function update() {
-        axios.put(`http://localhost:8080/products/update/${product.id}`, {name, price, shortDescription, categories: {category}, description}).then(_ => {
-            console.log("ok")
-        }).catch(console.log)
+        axios.put(`http://localhost:8080/products/update/${product.id}`, {id: product.id, name, price, shortDescription, categories: {category}, description}).catch(console.log)
     }
 
     useEffect(() => {
         axios.get(`http://localhost:8080/products/${product.id}`).then(response => {
-            const defaultDescription = response.data.description
+            defaultDescription = response.data.description
             setDescription(response.data.description)
         }).catch(console.log)
     }, [])
 
-    return (
+    return visible && (
         <>
         <tr>
 			<td className="align-middle">
@@ -247,7 +332,7 @@ function Product({product, categories}) {
                 <button type="button" className="btn btn-primary me-md-3" data-bs-toggle="modal" data-bs-target={`#${product.id}`}>
                     <i className="bi bi-pencil-square"></i>
                 </button>
-                <button type="button" className="btn btn-danger me-md-3">
+                <button type="button" className="btn btn-danger me-md-3" onClick={remove}>
                     <i className="bi bi-trash-fill"></i>
                 </button>
 			</td>
@@ -285,7 +370,7 @@ function Product({product, categories}) {
                             <div className="mb-3">
                                 <label className="mb-2 text-muted" htmlFor="firstname">Catégorie</label>
                                 <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="inputGroupSelect01" onChange={e => setCategory(e.target.value)}>
-                                    {categories.map(Acategory => <option key={Acategory} value={Acategory} selected={category.includes(Acategory)} >{Acategory}</option>)}
+                                    {categories.map(Acategory => <option key={Acategory} value={Acategory} selected={category === Acategory} >{Acategory}</option>)}
                                 </select>
                             </div>
 
