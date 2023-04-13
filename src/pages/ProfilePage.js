@@ -10,8 +10,11 @@ export default function() {
     const [lastName, setLastName] = useState()
     const [firstName, setFirstName] = useState()
 
-    const [visible, setVisble] = useState(false)
+    const [visible, setVisble] = useState([])
     const [load, setLoad] = useState(0)
+
+    const [password, setPassword] = useState("")
+    const [cpassword, setCPassword] = useState("")
 
     useEffect(() => {
         axios.get("http://localhost:8080/users/me").then(response => {
@@ -24,7 +27,13 @@ export default function() {
 
     useEffect(() => {
         if(load == 2) {
-            setVisble("button")
+            setVisble(["pbutton"])
+        }
+    }, [cpassword, password])
+
+    useEffect(() => {
+        if(load == 2) {
+            setVisble(["button"])
             return;
         }
         setLoad(load+1)
@@ -32,8 +41,20 @@ export default function() {
 
     function updateData() {
         axios.put("http://localhost:8080/users/update/me", {username, email, lastName, firstName}).then(
-            setVisble("alert")
+            setVisble(["alert", "success", "Information modifiées"])
         ).catch(console.log)
+    }
+
+    function updatePasswrd() {
+        if(password !== cpassword) {
+            setVisble(["alert", "danger", "Password pas bon :'("]);
+            return
+        }
+        axios.put("http://localhost:8080/users/update/me/password", {password}).then(_ => {
+            setPassword("")
+            setCPassword("")
+            setVisble(["alert", "success", "Mot de passe modifié"])
+        }).catch(console.log)
     }
 
     return (
@@ -41,14 +62,14 @@ export default function() {
         <NavBar />
         <div class="container">
             
-            {visible == "alert" && (
-                <div class="alert alert-success position-absolute top-2 end-0" role="alert">
-                    Bravo !
+            {visible[0] == "alert" && (
+                <div className={`alert alert-${visible[1]} position-absolute top-2 end-0`} role="alert">
+                    {visible[2]}
                 </div>
             )}
 
-            <div class="row">
-                <div class="col">
+            <div className="row">
+                <div className="col">
                     <h1>Profil</h1>
                     <form className="needs-validation" noValidate="" autoComplete="off">
 						<div className="mb-3">
@@ -73,13 +94,30 @@ export default function() {
 						</div>
 					</form>
                     {visible == "button" && (
-                            <div className="d-flex align-items-center">
-							    <button className="btn btn-primary ms-auto" onClick={updateData}>Modifier</button>
-						    </div>
-                        )}
+                        <div className="d-flex align-items-center">
+							<button className="btn btn-primary ms-auto" onClick={updateData}>Modifier</button>
+						</div>
+                    )}
                 </div>
-                <div class="col">
+                <div className="col">
                     <h1>Mot de passe</h1>
+                    <form className="needs-validation" noValidate="" autoComplete="off">
+						<div className="mb-3">
+						    <label className="mb-2 text-muted" htmlFor="password">Mot de passe</label>
+							<input id="password" type="password" className="form-control" name="password" required autoFocus value={password} onChange={e => setPassword(e.target.value)}/>
+						</div>
+                        <div className="mb-3">
+							<div className="mb-2 w-100">
+								<label className="text-muted" htmlFor="cpassword">Confirmation</label>
+							</div>
+						    <input id="cpassword" type="password" className="form-control" name="cpassword" required value={cpassword} onChange={e => setCPassword(e.target.value)}/>
+						</div>
+					</form>
+                    {visible == "pbutton" && (
+                        <div className="d-flex align-items-center">
+							<button className="btn btn-primary ms-auto" onClick={updatePasswrd}>Modifier</button>
+						</div>
+                    )}
                 </div>
             </div>
         </div>
