@@ -24,20 +24,29 @@ export default function() {
 
     useEffect(() => {
         if(load == 2) {
-            setVisble(true)
+            setVisble("button")
             return;
         }
         setLoad(load+1)
     }, [username, email, lastName, firstName])
 
     function updateData() {
-        axios.put("http://localhost:8080/users/update/me", {username, email, lastName, firstName}).catch(console.log)
+        axios.put("http://localhost:8080/users/update/me", {username, email, lastName, firstName}).then(
+            setVisble("alert")
+        ).catch(console.log)
     }
 
     return (
         <>
         <NavBar />
         <div class="container">
+            
+            {visible == "alert" && (
+                <div class="alert alert-success position-absolute top-2 end-0" role="alert">
+                    Bravo !
+                </div>
+            )}
+
             <div class="row">
                 <div class="col">
                     <h1>Profil</h1>
@@ -62,13 +71,12 @@ export default function() {
 							</div>
 						    <input id="firstName" type="text" className="form-control" name="firstName" required value={firstName} onChange={e => setFirstName(e.target.value)}/>
 						</div>
-
-						{visible && (
+					</form>
+                    {visible == "button" && (
                             <div className="d-flex align-items-center">
-							    <button type="submit" className="btn btn-primary ms-auto" onClick={updateData}>Modifier</button>
+							    <button className="btn btn-primary ms-auto" onClick={updateData}>Modifier</button>
 						    </div>
                         )}
-					</form>
                 </div>
                 <div class="col">
                     <h1>Mot de passe</h1>
