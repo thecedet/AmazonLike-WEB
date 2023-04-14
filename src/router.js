@@ -10,6 +10,7 @@ import RegisterPage from "./pages/RegisterPage";
 import CartPage from "./pages/CartPage";
 import AdminPage from "./pages/AdminPage";
 import ProfilePage from "./pages/ProfilePage";
+import ProductPage from "./pages/ProductPage";
 
 export default function Router() {
     return (
@@ -20,6 +21,7 @@ export default function Router() {
                 <Route path="/cart" element={<AuthGuard AuthComponent={CartPage} redirect={"/login"}/>} />
                 <Route path="/admin" element={<AuthGuard AuthComponent={AdminPage} redirect={"/login"} role={"ROLE_ADMIN"} />} />
                 <Route path="/me" element={<AuthGuard AuthComponent={ProfilePage} redirect={"/login"} />} />
+                <Route path="/product/:id" element={<ProductPage />} />
           		<Route path="/" element={<HomePage />} />
                 <Route path="*" element={<HomePage />} />
         	</Routes>

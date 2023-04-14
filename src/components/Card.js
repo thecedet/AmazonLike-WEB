@@ -11,7 +11,7 @@ export default function Card({product, cart, setCart}) {
     }
 
     return (
-        <div className="col mb-5">
+        <div className="col mb-5" style={{"cursor": "pointer"}}>
             <div className="card h-100">
                 <img className="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" />
                 <div className="card-body p-4">

@@ -46,7 +46,7 @@ export default function RegisterPage() {
 					<div className="card shadow-lg">
 						<div className="card-body p-5">
 							<h1 className="fs-4 card-title fw-bold mb-4">S'inscrire</h1>
-							<form className="needs-validation" noValidate="" autoComplete="off" onSubmit={handleSubmit}>
+							<form className="needs-validation" noValidate="" autoComplete={false} onSubmit={handleSubmit}>
 								<div className="mb-3">
 									<label className="mb-2 text-muted" htmlFor="username">Username</label>
 									<input id="username" type="text" className="form-control" name="username" required autoFocus />
@@ -54,6 +54,14 @@ export default function RegisterPage() {
 								<div className="mb-3">
 									<label className="mb-2 text-muted" htmlFor="email">E-Mail</label>
 									<input id="email" type="email" className="form-control" name="email" required autoFocus />
+								</div>
+								<div className="mb-3">
+									<label className="mb-2 text-muted" htmlFor="firstName">Prénom</label>
+									<input id="firstName" type="text" className="form-control" name="firstName" required autoFocus />
+								</div>
+								<div className="mb-3">
+									<label className="mb-2 text-muted" htmlFor="lastname">Nom</label>
+									<input id="lastname" type="text" className="form-control" name="lastname" required autoFocus />
 								</div>
 								<div className="mb-3">
 									<div className="mb-2 w-100">
