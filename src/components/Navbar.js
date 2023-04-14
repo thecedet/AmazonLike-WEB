@@ -26,7 +26,7 @@ export default function NavBar({cart, setHash}) {
                         <li className="nav-item dropdown">
                             {window.location.pathname === "/" && (<a className="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catégories</a>)}
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><Link className="dropdown-item" to="/">Tous les produits</Link></li>
+                                <li><Link className="dropdown-item" to="/" onClick={() => setHash("")}>Tous les produits</Link></li>
                                 <li><hr className="dropdown-divider" /></li>
                                 {categories.map(category => <li><Link className="dropdown-item" onClick={() => setHash(category)} to={`#${category}`}>{category}</Link></li>)}
                             </ul>

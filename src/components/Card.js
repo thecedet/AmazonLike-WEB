@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Card({product, cart, setCart}) {
 
@@ -11,7 +12,7 @@ export default function Card({product, cart, setCart}) {
     }
 
     return (
-        <div className="col mb-5" style={{"cursor": "pointer"}}>
+        <div className="col mb-5">
             <div className="card h-100">
                 <img className="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" />
                 <div className="card-body p-4">
@@ -39,6 +40,9 @@ export default function Card({product, cart, setCart}) {
                             <button className="btn btn-outline-dark mt-auto" onClick={() => handle(1)}>Ajouter au panier</button>
                         </div>
                     )}
+                    <div className="text-center">
+                            <Link className="btn btn-outline-dark mt-auto" to={`/product/${product.id}`}>Voir</Link>
+                    </div>
 
                     
                 </div>
